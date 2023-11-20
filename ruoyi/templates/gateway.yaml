@@ -1,0 +1,109 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ruoyi-gateway
+data:
+  config.yml: |-
+    # Tomcat
+    server:
+      port: 8080
+
+    # Spring
+    spring: 
+      application:
+        # 应用名称
+        name: ruoyi-gateway
+      profiles:
+        # 环境配置
+        active: dev
+      cloud:
+        nacos:
+          discovery:
+            # 服务注册地址
+            server-addr: {{ .Values.nacos.addr }}
+          config:
+            # 配置中心地址
+            server-addr: {{ .Values.nacos.addr }}
+            # 配置文件格式
+            file-extension: yml
+            # 共享配置
+            shared-configs:
+              - application-${spring.profiles.active}.${spring.cloud.nacos.config.file-extension}
+        sentinel:
+          # 取消控制台懒加载
+          eager: true
+          transport:
+            # 控制台地址
+            dashboard: {{ .Values.domainName }}
+          # nacos配置持久化
+          datasource:
+            ds1:
+              nacos:
+                server-addr: {{ .Values.nacos.addr }}
+                dataId: sentinel-ruoyi-gateway
+                groupId: DEFAULT_GROUP
+                data-type: json
+                rule-type: gw-flow
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ruoyi-gateway
+spec:
+  selector:
+    app: ruoyi-gateway
+  ports:
+    - name: tcp-8080
+      port: 8080
+      targetPort: 8080
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ruoyi-gateway
+  labels:
+    app: ruoyi-gateway
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ruoyi-gateway
+  template:
+    metadata:
+      labels:
+        app: ruoyi-gateway
+    spec:
+      volumes:
+        - name: ruoyi-gateway
+          configMap:
+            defaultMode: 0755
+            name: ruoyi-gateway
+      containers:
+        - name: ruoyi-gateway
+          image: "{{ .Values.hub }}/ruoyi-gateway:{{ .Values.tag }}"
+          imagePullPolicy: Always
+          volumeMounts:
+            - name: ruoyi-gateway
+              mountPath: /app/config.yml
+              subPath: config.yml
+          ports:
+            - name: tcp-8080
+              containerPort: 8080
+              protocol: TCP
+          livenessProbe:
+            initialDelaySeconds: 90
+            periodSeconds: 5
+            timeoutSeconds: 5
+            tcpSocket:
+              port: 8080
+          readinessProbe:
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            timeoutSeconds: 5
+            tcpSocket:
+              port: 8080
+          env:
+            - name: TZ
+              value: "Asia/Shanghai"

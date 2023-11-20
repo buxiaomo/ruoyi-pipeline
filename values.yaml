@@ -1,0 +1,9 @@
+# Default values for ruoyi.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+hub: 172.16.115.11:5000/buxiaomo
+tag: v3.6.2
+
+nacos:
+  addr: nacos.infra.svc.cluster.local:8848
