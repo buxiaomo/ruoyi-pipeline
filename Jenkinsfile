@@ -38,10 +38,24 @@ pipeline {
         }
 
         stage('compile') {
-            steps {
-                dir('RuoYi-Cloud') {
-                    withDockerContainer(image: 'maven:3.9.0', args: '--net host -v m2:/root/.m2') {
-                        sh "mvn clean package -Dmaven.test.skip=true -q"
+            parallel {
+                stage('front-end') {
+                    steps {
+                        dir('RuoYi-Cloud') {
+                            withDockerContainer(image: 'maven:3.9.0', args: '--net host -v m2:/root/.m2') {
+                                sh "mvn clean package -Dmaven.test.skip=true -q"
+                            }
+                        }
+                    }
+                }
+                stage('back-end') {
+                    steps {
+                        dir('RuoYi-Cloud/ruoyi-ui') {
+                            withDockerContainer(image: 'node:16-bullseye-slim', args: '--net host') {
+                                sh "npm install"
+                                sh "npm run build:prod"
+                            }
+                        }
                     }
                 }
             }
