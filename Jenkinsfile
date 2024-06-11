@@ -8,7 +8,7 @@ pipeline {
         PROJECT_ENV = "dev"
 
         REPOSITORY_AUTH = "gitlab"
-        REPOSITORY_URL = "http://gitlab.devops.local/devops/ruoyi.git"
+        REPOSITORY_URL = "https://gitee.com/y_project/RuoYi-Cloud.git"
 
         REGISTRY_HOST = "172.16.115.11:5000"
     }
@@ -19,6 +19,11 @@ pipeline {
             name: "version",
             defaultValue: "v3.6.2",
         )
+        string(
+            description: "deploy for env?",
+            name: "env",
+            defaultValue: "dev",
+        )
     }
 
     options {
@@ -28,15 +33,15 @@ pipeline {
     stages {
         stage('checkout') {
             steps {
-                checkout scmGit(branches: [[name: "refs/tags/${params.version}"]], extensions: [[$class: "RelativeTargetDirectory", relativeTargetDir: "RuoYi-Cloud"]], userRemoteConfigs: [[url: "https://gitee.com/y_project/RuoYi-Cloud.git"]])
+                checkout scmGit(branches: [[name: "refs/tags/${params.version}"]], extensions: [[$class: "RelativeTargetDirectory", relativeTargetDir: "RuoYi-Cloud"]], userRemoteConfigs: [[url: "${env.REPOSITORY_URL}"]])
             }
         }
 
-        stage('maven') {
+        stage('compile') {
             steps {
                 dir('RuoYi-Cloud') {
-                    withDockerContainer(image: 'registry.cn-hangzhou.aliyuncs.com/buxiaomo/maven:3.9.0', args: '-v m2:/app/.m2') {
-                        sh "mvn clean package -Dmaven.test.skip=true"
+                    withDockerContainer(image: 'maven:3.9.0', args: '--net host -v m2:/root/.m2') {
+                        sh "mvn clean package -Dmaven.test.skip=true -q"
                     }
                 }
             }
@@ -44,63 +49,57 @@ pipeline {
 
         stage('build image') {
             parallel {
-                stage('build ruoyi-gateway') {
+                stage('ruoyi-gateway') {
                     steps {
-                        sh label: 'Build', script: "nerdctl build --platform=amd64 --output type=image,name=${env.REGISTRY_HOST}/${env.PROJECT_NAME}/ruoyi-gateway:${params.version},push=true . -f gateway.Dockerfile"
+                        sh label: 'build image', script: "nerdctl build --platform=amd64 --output type=image,name=${env.REGISTRY_HOST}/${env.PROJECT_NAME}/ruoyi-gateway:${params.version},push=true -f gateway.Dockerfile ."
                     }
                 }
-                stage('build ruoyi-auth') {
+                stage('ruoyi-auth') {
                     steps {
-                        sh label: 'Build', script: "buildah bud -t ${env.REGISTRY_HOST}/${env.PROJECT_NAME}/ruoyi-auth:${params.version} -f auth.Dockerfile ."
-                        sh label: 'Push', script: "buildah push --tls-verify=false ${env.REGISTRY_HOST}/${env.PROJECT_NAME}/ruoyi-auth:${params.version}"
+                        sh label: 'build image', script: "nerdctl build --platform=amd64 --output type=image,name=${env.REGISTRY_HOST}/${env.PROJECT_NAME}/ruoyi-auth:${params.version},push=true -f auth.Dockerfile ."
                     }
                 }
-                stage('build ruoyi-modules-system') {
+                stage('ruoyi-modules-system') {
                     steps {
-                        sh label: 'Build', script: "buildah bud -t ${env.REGISTRY_HOST}/${env.PROJECT_NAME}/ruoyi-modules-system:${params.version} -f modules-system.Dockerfile ."
-                        sh label: 'Push', script: "buildah push --tls-verify=false ${env.REGISTRY_HOST}/${env.PROJECT_NAME}/ruoyi-modules-system:${params.version}"
+                        sh label: 'build image', script: "nerdctl build --platform=amd64 --output type=image,name=${env.REGISTRY_HOST}/${env.PROJECT_NAME}/ruoyi-modules-system:${params.version},push=true -f modules-system.Dockerfile ."
                     }
                 }
-                stage('build ruoyi-modules-gen') {
+                stage('ruoyi-modules-gen') {
                     steps {
-                        sh label: 'Build', script: "buildah bud -t ${env.REGISTRY_HOST}/${env.PROJECT_NAME}/ruoyi-modules-gen:${params.version} -f modules-gen.Dockerfile ."
-                        sh label: 'Push', script: "buildah push --tls-verify=false ${env.REGISTRY_HOST}/${env.PROJECT_NAME}/ruoyi-modules-gen:${params.version}"
+                        sh label: 'build image', script: "nerdctl build --platform=amd64 --output type=image,name=${env.REGISTRY_HOST}/${env.PROJECT_NAME}/ruoyi-modules-gen:${params.version},push=true -f modules-gen.Dockerfile ."
                     }
                 }
-                stage('build ruoyi-modules-job') {
+                stage('ruoyi-modules-job') {
                     steps {
-                        sh label: 'Build', script: "buildah bud -t ${env.REGISTRY_HOST}/${env.PROJECT_NAME}/ruoyi-modules-job:${params.version} -f modules-job.Dockerfile ."
-                        sh label: 'Push', script: "buildah push --tls-verify=false ${env.REGISTRY_HOST}/${env.PROJECT_NAME}/ruoyi-modules-job:${params.version}"
+                        sh label: 'build image', script: "nerdctl build --platform=amd64 --output type=image,name=${env.REGISTRY_HOST}/${env.PROJECT_NAME}/ruoyi-modules-job:${params.version},push=true -f modules-job.Dockerfile ."
                     }
                 }
-                stage('build ruoyi-modules-file') {
+                stage('ruoyi-modules-file') {
                     steps {
-                        sh label: 'Build', script: "buildah bud -t ${env.REGISTRY_HOST}/${env.PROJECT_NAME}/ruoyi-modules-file:${params.version} -f modules-file.Dockerfile ."
-                        sh label: 'Push', script: "buildah push --tls-verify=false ${env.REGISTRY_HOST}/${env.PROJECT_NAME}/ruoyi-modules-file:${params.version}"
+                        sh label: 'build image', script: "nerdctl build --platform=amd64 --output type=image,name=${env.REGISTRY_HOST}/${env.PROJECT_NAME}/ruoyi-modules-file:${params.version},push=true -f modules-file.Dockerfile ."
                     }
                 }
-                stage('build ruoyi-visual-monitor') {
+                stage('ruoyi-visual-monitor') {
                     steps {
-                        sh label: 'Build', script: "buildah bud -t ${env.REGISTRY_HOST}/${env.PROJECT_NAME}/ruoyi-visual-monitor:${params.version} -f visual-monitor.Dockerfile ."
-                        sh label: 'Push', script: "buildah push --tls-verify=false ${env.REGISTRY_HOST}/${env.PROJECT_NAME}/ruoyi-visual-monitor:${params.version}"
+                        sh label: 'build image', script: "nerdctl build --platform=amd64 --output type=image,name=${env.REGISTRY_HOST}/${env.PROJECT_NAME}/ruoyi-visual-monitor:${params.version},push=true -f visual-monitor.Dockerfile ."
                     }
                 }
-                stage('build ruoyi-vue') {
+                stage('ruoyi-vue') {
                     steps {
-                        sh label: 'Build', script: "buildah bud -t ${env.REGISTRY_HOST}/${env.PROJECT_NAME}/ruoyi-ui:${params.version} -f ruoyi-ui.Dockerfile ."
-                        sh label: 'Push', script: "buildah push --tls-verify=false ${env.REGISTRY_HOST}/${env.PROJECT_NAME}/ruoyi-ui:${params.version}"
+                        sh label: 'build image', script: "nerdctl build --platform=amd64 --output type=image,name=${env.REGISTRY_HOST}/${env.PROJECT_NAME}/ruoyi-ui:${params.version},push=true -f ruoyi-ui.Dockerfile ."
                     }
                 }
             }
         }
 
-        stage('deploy service') {
-            steps {
-                withKubeConfig(caCertificate: '', clusterName: 'kubernetes', contextName: 'default', credentialsId: 'kubeconfig', namespace: 'ruoyi', restrictKubeConfigAccess: false, serverUrl: 'https://172.16.115.11:6443') {
-                    sh "helm upgrade -i ruoyi --set hub=${env.REGISTRY_HOST}/${env.PROJECT_NAME} --set tag=${params.version} --set nacos.addr=nacos.infra.svc.cluster.local:8848 ruoyi --create-namespace --namespace ${env.PROJECT_NAME}-${env.PROJECT_ENV}"
-                }
-            }
-        }
+        // stage('deploy service') {
+        //     steps {
+        //         input 'is ready to deploy prod'
+        //         withKubeConfig(caCertificate: '', clusterName: 'kubernetes', contextName: 'default', credentialsId: 'kubeconfig', namespace: 'ruoyi', restrictKubeConfigAccess: false, serverUrl: 'https://172.16.115.11:6443') {
+        //             sh "helm upgrade -i ruoyi --set hub=${env.REGISTRY_HOST}/${env.PROJECT_NAME} --set tag=${params.version} --set nacos.addr=nacos.infra.svc.cluster.local:8848 ruoyi --create-namespace --namespace ${env.PROJECT_NAME}-${env.PROJECT_ENV}"
+        //         }
+        //     }
+        // }
     }
     // post { 
     //     cleanup{
