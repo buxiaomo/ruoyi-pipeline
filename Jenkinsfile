@@ -112,14 +112,14 @@ pipeline {
             }
         }
 
-        // stage('deploy service') {
-        //     steps {
-        //         input 'is ready to deploy prod'
-        //         withKubeConfig(caCertificate: '', clusterName: 'kubernetes', contextName: 'default', credentialsId: 'kubeconfig', namespace: 'ruoyi', restrictKubeConfigAccess: false, serverUrl: 'https://172.16.115.11:6443') {
-        //             sh "helm upgrade -i ruoyi --set hub=${env.REGISTRY_HOST}/${env.PROJECT_NAME} --set tag=${params.version} --set nacos.addr=nacos.infra.svc.cluster.local:8848 ruoyi --create-namespace --namespace ${env.PROJECT_NAME}-${env.PROJECT_ENV}"
-        //         }
-        //     }
-        // }
+        stage('deploy') {
+            steps {
+                input 'Is it deployed to the environment(${env.PROJECT_ENV})?'
+                withKubeConfig(caCertificate: '', clusterName: 'kubernetes', contextName: 'default', credentialsId: 'kubeconfig', namespace: 'ruoyi', restrictKubeConfigAccess: false, serverUrl: 'https://172.16.115.11:6443') {
+                    sh "helm upgrade -i ruoyi --set hub=${env.REGISTRY_HOST}/${env.PROJECT_NAME} --set tag=${params.version} --set nacos.addr=nacos.infra.svc.cluster.local:8848 ruoyi --create-namespace --namespace ${env.PROJECT_NAME}-${env.PROJECT_ENV}"
+                }
+            }
+        }
     }
     // post { 
     //     cleanup{
