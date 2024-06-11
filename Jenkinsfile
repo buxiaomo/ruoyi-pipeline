@@ -15,9 +15,14 @@ pipeline {
 
     parameters{
         string(
-            description: "Version of RuoYi-Cloud ?",
+            description: "version of RuoYi?",
             name: "version",
-            defaultValue: "v3.6.2",
+            defaultValue: "v3.6.4",
+        )
+        string(
+            description: "arch?",
+            name: "arch",
+            defaultValue: "amd64",
         )
         string(
             description: "deploy for env?",
@@ -52,6 +57,7 @@ pipeline {
                     steps {
                         dir('RuoYi-Cloud/ruoyi-ui') {
                             withDockerContainer(image: 'node:16-bullseye-slim', args: '--net host') {
+                                sh "npm config set registry https://registry.npmmirror.com"
                                 sh "npm install"
                                 sh "npm run build:prod"
                             }
@@ -65,42 +71,42 @@ pipeline {
             parallel {
                 stage('ruoyi-gateway') {
                     steps {
-                        sh label: 'build image', script: "nerdctl build --platform=amd64 --output type=image,name=${env.REGISTRY_HOST}/${env.PROJECT_NAME}/ruoyi-gateway:${params.version},push=true -f gateway.Dockerfile ."
+                        sh label: 'build image', script: "nerdctl build --platform=${params.arch} --output type=image,name=${env.REGISTRY_HOST}/${env.PROJECT_NAME}/ruoyi-gateway:${params.version},push=true -f gateway.Dockerfile ."
                     }
                 }
                 stage('ruoyi-auth') {
                     steps {
-                        sh label: 'build image', script: "nerdctl build --platform=amd64 --output type=image,name=${env.REGISTRY_HOST}/${env.PROJECT_NAME}/ruoyi-auth:${params.version},push=true -f auth.Dockerfile ."
+                        sh label: 'build image', script: "nerdctl build --platform=${params.arch} --output type=image,name=${env.REGISTRY_HOST}/${env.PROJECT_NAME}/ruoyi-auth:${params.version},push=true -f auth.Dockerfile ."
                     }
                 }
                 stage('ruoyi-modules-system') {
                     steps {
-                        sh label: 'build image', script: "nerdctl build --platform=amd64 --output type=image,name=${env.REGISTRY_HOST}/${env.PROJECT_NAME}/ruoyi-modules-system:${params.version},push=true -f modules-system.Dockerfile ."
+                        sh label: 'build image', script: "nerdctl build --platform=${params.arch} --output type=image,name=${env.REGISTRY_HOST}/${env.PROJECT_NAME}/ruoyi-modules-system:${params.version},push=true -f modules-system.Dockerfile ."
                     }
                 }
                 stage('ruoyi-modules-gen') {
                     steps {
-                        sh label: 'build image', script: "nerdctl build --platform=amd64 --output type=image,name=${env.REGISTRY_HOST}/${env.PROJECT_NAME}/ruoyi-modules-gen:${params.version},push=true -f modules-gen.Dockerfile ."
+                        sh label: 'build image', script: "nerdctl build --platform=${params.arch} --output type=image,name=${env.REGISTRY_HOST}/${env.PROJECT_NAME}/ruoyi-modules-gen:${params.version},push=true -f modules-gen.Dockerfile ."
                     }
                 }
                 stage('ruoyi-modules-job') {
                     steps {
-                        sh label: 'build image', script: "nerdctl build --platform=amd64 --output type=image,name=${env.REGISTRY_HOST}/${env.PROJECT_NAME}/ruoyi-modules-job:${params.version},push=true -f modules-job.Dockerfile ."
+                        sh label: 'build image', script: "nerdctl build --platform=${params.arch} --output type=image,name=${env.REGISTRY_HOST}/${env.PROJECT_NAME}/ruoyi-modules-job:${params.version},push=true -f modules-job.Dockerfile ."
                     }
                 }
                 stage('ruoyi-modules-file') {
                     steps {
-                        sh label: 'build image', script: "nerdctl build --platform=amd64 --output type=image,name=${env.REGISTRY_HOST}/${env.PROJECT_NAME}/ruoyi-modules-file:${params.version},push=true -f modules-file.Dockerfile ."
+                        sh label: 'build image', script: "nerdctl build --platform=${params.arch} --output type=image,name=${env.REGISTRY_HOST}/${env.PROJECT_NAME}/ruoyi-modules-file:${params.version},push=true -f modules-file.Dockerfile ."
                     }
                 }
                 stage('ruoyi-visual-monitor') {
                     steps {
-                        sh label: 'build image', script: "nerdctl build --platform=amd64 --output type=image,name=${env.REGISTRY_HOST}/${env.PROJECT_NAME}/ruoyi-visual-monitor:${params.version},push=true -f visual-monitor.Dockerfile ."
+                        sh label: 'build image', script: "nerdctl build --platform=${params.arch} --output type=image,name=${env.REGISTRY_HOST}/${env.PROJECT_NAME}/ruoyi-visual-monitor:${params.version},push=true -f visual-monitor.Dockerfile ."
                     }
                 }
                 stage('ruoyi-vue') {
                     steps {
-                        sh label: 'build image', script: "nerdctl build --platform=amd64 --output type=image,name=${env.REGISTRY_HOST}/${env.PROJECT_NAME}/ruoyi-ui:${params.version},push=true -f ruoyi-ui.Dockerfile ."
+                        sh label: 'build image', script: "nerdctl build --platform=${params.arch} --output type=image,name=${env.REGISTRY_HOST}/${env.PROJECT_NAME}/ruoyi-ui:${params.version},push=true -f ruoyi-ui.Dockerfile ."
                     }
                 }
             }
