@@ -4,6 +4,7 @@ kind: Service
 metadata:
   name: ruoyi-ui
 spec:
+  type: NodePort
   selector:
     app: ruoyi-ui
   ports:
@@ -37,7 +38,7 @@ spec:
               containerPort: 80
               protocol: TCP
           livenessProbe:
-            initialDelaySeconds: 90
+            initialDelaySeconds: 5
             periodSeconds: 5
             timeoutSeconds: 5
             tcpSocket:
