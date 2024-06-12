@@ -19,10 +19,10 @@ pipeline {
             name: "version",
             defaultValue: "v3.6.4",
         )
-        string(
-            description: "arch?",
-            name: "arch",
-            defaultValue: "amd64",
+        choice(
+            description: 'docker image arch?',
+            choices: ['amd64', 'arm64', 'amd64,arm64'],
+            name: 'arch',
         )
         string(
             description: "deploy for env?",
@@ -44,7 +44,7 @@ pipeline {
 
         stage('compile') {
             parallel {
-                stage('front-end') {
+                stage('back-end') {
                     steps {
                         dir('RuoYi-Cloud') {
                             withDockerContainer(image: 'maven:3.9.0', args: '--net host -v m2:/root/.m2') {
@@ -53,7 +53,7 @@ pipeline {
                         }
                     }
                 }
-                stage('back-end') {
+                stage('front-end') {
                     steps {
                         dir('RuoYi-Cloud/ruoyi-ui') {
                             withDockerContainer(image: 'node:16-bullseye-slim', args: '--net host') {
@@ -114,9 +114,9 @@ pipeline {
 
         stage('deploy') {
             steps {
-                input 'Is it deployed to the environment(${env.PROJECT_ENV})?'
+                input "Is it deployed to the environment(${params.PROJECT_ENV})?"
                 withKubeConfig(caCertificate: '', clusterName: 'kubernetes', contextName: 'default', credentialsId: 'kubeconfig', namespace: 'ruoyi', restrictKubeConfigAccess: false, serverUrl: 'https://172.16.115.11:6443') {
-                    sh "helm upgrade -i ruoyi --set hub=${env.REGISTRY_HOST}/${env.PROJECT_NAME} --set tag=${params.version} --set nacos.addr=nacos.infra.svc.cluster.local:8848 ruoyi --create-namespace --namespace ${env.PROJECT_NAME}-${env.PROJECT_ENV}"
+                    sh "helm upgrade -i ruoyi --set hub=${env.REGISTRY_HOST}/${env.PROJECT_NAME} --set tag=${params.version} --set nacos.addr=nacos:8848 ruoyi --create-namespace --namespace ${env.PROJECT_NAME}-${env.PROJECT_ENV}"
                 }
             }
         }

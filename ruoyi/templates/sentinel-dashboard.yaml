@@ -1,0 +1,57 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: sentinel-dashboard
+spec:
+  selector:
+    app: sentinel-dashboard
+  type: NodePort
+  ports:
+    - name: dashboard
+      port: 8080
+      targetPort: 8080
+      protocol: TCP
+    - name: api
+      port: 8719
+      targetPort: 8719
+      protocol: TCP
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sentinel-dashboard
+  labels:
+    app: sentinel-dashboard
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sentinel-dashboard
+  template:
+    metadata:
+      labels:
+        app: sentinel-dashboard
+    spec:
+      containers:
+        - name: sentinel-dashboard
+          image: buxiaomo/sentinel-dashboard:1.8.8
+          imagePullPolicy: Always
+          ports:
+            - name: tcp
+              containerPort: 8080
+              protocol: TCP
+          livenessProbe:
+            initialDelaySeconds: 90
+            periodSeconds: 5
+            timeoutSeconds: 5
+            tcpSocket:
+              port: 8080
+          readinessProbe:
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            timeoutSeconds: 5
+            tcpSocket:
+              port: 8080
+          env:
+            - name: TZ
+              value: "Asia/Shanghai"

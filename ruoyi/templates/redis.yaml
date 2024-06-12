@@ -1,0 +1,62 @@
+{{ if eq .Values.redis.type "internal" }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: redis
+spec:
+  selector:
+    app: redis
+  ports:
+    - name: tcp-6379
+      port: 6379
+      targetPort: 6379
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis
+  labels:
+    app: redis
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: redis
+  template:
+    metadata:
+      labels:
+        app: redis
+    spec:
+      volumes:
+        - name: redis-vol
+          persistentVolumeClaim:
+            claimName: ruoyi
+      containers:
+        - name: redis
+          image: "{{ .Values.redis.internal.image.repository }}:{{ .Values.redis.internal.image.tag }}"
+          imagePullPolicy: Always
+          volumeMounts:
+            - name: redis-vol
+              subPath: redis-vol
+              mountPath: /data
+          ports:
+            - name: tcp-6379
+              containerPort: 6379
+              protocol: TCP
+          livenessProbe:
+            initialDelaySeconds: 90
+            periodSeconds: 5
+            timeoutSeconds: 5
+            tcpSocket:
+              port: 6379
+          readinessProbe:
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            timeoutSeconds: 5
+            tcpSocket:
+              port: 6379
+          env:
+            - name: TZ
+              value: "Asia/Shanghai"
+{{ end }}

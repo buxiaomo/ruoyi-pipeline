@@ -20,10 +20,10 @@ data:
         nacos:
           discovery:
             # 服务注册地址
-            server-addr: {{ .Values.nacos.addr }}
+            server-addr: {{ if eq .Values.nacos.type "internal" }}nacos:8848{{else}}{{ .Values.nacos.external.addr }}{{end}}
           config:
             # 配置中心地址
-            server-addr: {{ .Values.nacos.addr }}
+            server-addr: {{ if eq .Values.nacos.type "internal" }}nacos:8848{{else}}{{ .Values.nacos.external.addr }}{{end}}
             # 配置文件格式
             file-extension: yml
             # 共享配置
@@ -39,7 +39,7 @@ data:
           datasource:
             ds1:
               nacos:
-                server-addr: {{ .Values.nacos.addr }}
+                server-addr: {{ if eq .Values.nacos.type "internal" }}nacos:8848{{else}}{{ .Values.nacos.external.addr }}{{end}}
                 dataId: sentinel-ruoyi-gateway
                 groupId: DEFAULT_GROUP
                 data-type: json

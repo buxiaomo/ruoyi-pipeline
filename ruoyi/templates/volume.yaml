@@ -1,0 +1,33 @@
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: ruoyi
+  labels:
+    app: ruoyi
+spec:
+  capacity:
+    storage: 50Gi
+  accessModes:
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  nfs:
+    path: /data/ruoyi
+    server: 172.16.115.11
+
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: ruoyi
+  labels:
+    app: ruoyi
+spec:
+  accessModes:
+    - "ReadWriteMany"
+  resources:
+    requests:
+      storage: "50Gi"
+  selector:
+    matchLabels:
+      app: ruoyi
