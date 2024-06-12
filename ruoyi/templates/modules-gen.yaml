@@ -77,7 +77,7 @@ spec:
               containerPort: 9202
               protocol: TCP
           livenessProbe:
-            initialDelaySeconds: 30
+            initialDelaySeconds: 60
             periodSeconds: 5
             timeoutSeconds: 5
             tcpSocket:
