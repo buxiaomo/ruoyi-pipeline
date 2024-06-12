@@ -2,12 +2,12 @@
 kind: Ingress
 apiVersion: networking.k8s.io/v1
 metadata:
-  name: yuoyi
+  name: ruoyi
   annotations:
     kubernetes.io/ingress.class: traefik
 spec:
   rules:
-    - host: yuoyi.example.com
+    - host: {{ .Values.domainName }}
       http:
         paths:
           - path: /nacos
@@ -22,13 +22,6 @@ spec:
             backend:
               service:
                 name: ruoyi-gateway
-                port:
-                  number: 8080
-          - path: /jenkins
-            pathType: Prefix
-            backend:
-              service:
-                name: jenkins
                 port:
                   number: 8080
           - path: /

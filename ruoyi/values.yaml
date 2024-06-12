@@ -2,7 +2,7 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
-domainName: yuoyi.example.com
+domainName: ruoyi.example.com
 
 hub: registry:5000/ruoyi
 tag: v3.6.2
