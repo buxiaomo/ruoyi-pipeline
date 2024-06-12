@@ -1,4 +1,4 @@
-{{ if eq .Values.nacos.type "internal" }}
+{{ if .Values.nacos.type == "internal" }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
