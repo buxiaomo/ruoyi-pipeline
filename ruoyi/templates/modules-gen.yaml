@@ -2,6 +2,8 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: ruoyi-modules-gen
+  labels:
+    project: ruoyi
 data:
   config.yml: |-
     # Tomcat
@@ -49,6 +51,7 @@ metadata:
   name: ruoyi-modules-gen
   labels:
     app: ruoyi-modules-gen
+    project: ruoyi
 spec:
   replicas: 1
   selector:

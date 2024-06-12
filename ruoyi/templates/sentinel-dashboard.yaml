@@ -2,6 +2,8 @@ apiVersion: v1
 kind: Service
 metadata:
   name: sentinel-dashboard
+  labels:
+    project: ruoyi
 spec:
   selector:
     app: sentinel-dashboard
@@ -22,6 +24,7 @@ metadata:
   name: sentinel-dashboard
   labels:
     app: sentinel-dashboard
+    project: ruoyi
 spec:
   replicas: 1
   selector:

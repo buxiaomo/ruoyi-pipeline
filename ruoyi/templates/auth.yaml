@@ -2,6 +2,8 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: ruoyi-auth
+  labels:
+    project: ruoyi
 data:
   config.yml: |-
     # Tomcat
@@ -35,6 +37,8 @@ apiVersion: v1
 kind: Service
 metadata:
   name: ruoyi-auth
+  labels:
+    project: ruoyi
 spec:
   selector:
     app: ruoyi-auth
@@ -50,6 +54,7 @@ metadata:
   name: ruoyi-auth
   labels:
     app: ruoyi-auth
+    project: ruoyi
 spec:
   replicas: 1
   selector:

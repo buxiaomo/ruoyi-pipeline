@@ -2,8 +2,38 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
-hub: 172.16.115.11:5000/buxiaomo
+domainName: ruoyi.example.com
+
+hub: registry:5000/ruoyi
 tag: v3.6.2
 
+redis:
+  type: internal
+  internal:
+    image:
+      repository: redis
+      tag: 6.2.6-alpine
+  external:
+    addr: "192.168.0.2:6379"
+    password: ""
+
+
+mysql:
+  type: internal
+  internal:
+    image:
+      repository: mysql
+      tag: 5.7
+  external:
+    addr: "192.168.0.2:3306"
+    username: ""
+    password: ""
+
 nacos:
-  addr: nacos.infra.svc.cluster.local:8848
+  type: internal
+  internal:
+    image:
+      repository: nacos/nacos-server
+      tag: v2.2.0
+  external:
+    addr: "192.168.0.2:8848"
