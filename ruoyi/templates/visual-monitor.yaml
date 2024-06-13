@@ -99,7 +99,6 @@ spec:
               cpu: "2"
               memory: "1Gi"
             requests:
-              cpu: "1"
               memory: "512Mi"
           env:
             - name: TZ

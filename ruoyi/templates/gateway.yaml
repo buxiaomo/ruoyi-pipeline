@@ -36,7 +36,7 @@ data:
           eager: true
           transport:
             # 控制台地址
-            dashboard: {{ .Values.domainName }}
+            dashboard: sentinel-dashboard:8080
           # nacos配置持久化
           datasource:
             ds1:
@@ -114,7 +114,6 @@ spec:
               cpu: "2"
               memory: "1Gi"
             requests:
-              cpu: "1"
               memory: "512Mi"
           env:
             - name: TZ
