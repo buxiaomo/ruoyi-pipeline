@@ -5,7 +5,13 @@
 domainName: ruoyi.example.com
 
 hub: registry:5000/ruoyi
-tag: v3.6.2
+tag: v3.6.4
+
+ruoyi:
+  # file, minio
+  storage: "file"
+  sentinel:
+    enable: true
 
 redis:
   type: internal

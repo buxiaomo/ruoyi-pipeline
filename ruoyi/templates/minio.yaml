@@ -1,0 +1,78 @@
+{{ if eq .Values.ruoyi.storage "minio" }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: minio
+spec:
+  selector:
+    app: minio
+  ports:
+    - name: minio
+      port: 9000
+      targetPort: 9000
+      protocol: TCP
+      appProtocol: http
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: minio
+  labels:
+    app: minio
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: minio
+  template:
+    metadata:
+      labels:
+        app: minio
+    spec:
+      volumes:
+        - name: minio-vol
+          persistentVolumeClaim:
+            claimName: ruoyi
+      containers:
+        - name: minio
+          image: minio/minio:RELEASE.2021-03-12T00-00-47Z
+          command: 
+            - "/bin/sh"
+            - "-ce"
+            - "/usr/bin/docker-entrypoint.sh minio server --json /data"
+          imagePullPolicy: Always
+          volumeMounts:
+            - name: minio-vol
+              subPath: minio-vol
+              mountPath: /data
+          ports:
+            - name: tcp
+              containerPort: 9000
+              protocol: TCP
+          livenessProbe:
+            initialDelaySeconds: 15
+            periodSeconds: 5
+            timeoutSeconds: 5
+            tcpSocket:
+              port: 9000
+          readinessProbe:
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            timeoutSeconds: 5
+            tcpSocket:
+              port: 9000
+          env:
+            - name: TZ
+              value: "Asia/Shanghai"
+            - name: MINIO_ROOT_USER
+              value: "uig8ooMoqu6feek7Eefo"
+            - name: MINIO_ROOT_PASSWORD
+              value: "iekuenaa5uWaiqu9apeenaichieh6ahm6eilahfa"
+          resources:
+            limits:
+              cpu: "1"
+              memory: "1Gi"
+            requests:
+              cpu: "0.5"
+              memory: "512Mi"
+{{end}}
