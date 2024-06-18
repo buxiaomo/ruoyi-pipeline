@@ -20,11 +20,15 @@ spec:
   selector:
     app: minio
   ports:
-    - name: minio
+    - name: api
       port: 9000
       targetPort: 9000
       protocol: TCP
-      appProtocol: http
+    - name: ui
+      port: 9001
+      targetPort: 9001
+      protocol: TCP
+
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -52,7 +56,7 @@ spec:
           command: 
             - "/bin/sh"
             - "-ce"
-            - "/usr/bin/docker-entrypoint.sh minio server --json /data"
+            - "server /data --console-address :9001"
           imagePullPolicy: Always
           volumeMounts:
             - name: minio-vol
