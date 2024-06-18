@@ -15,24 +15,24 @@ pipeline {
 
     parameters{
         string(
-            description: "version of RuoYi?",
+            description: "Version of RuoYi-Cloud?",
             name: "version",
             defaultValue: "v3.6.4",
         )
         choice(
-            description: 'docker image arch?',
+            description: 'Docker image Arch?',
             choices: ['amd64', 'arm64', 'amd64,arm64'],
             name: 'arch',
         )
-        string(
-            description: "deploy for env?",
-            name: "env",
-            defaultValue: "dev",
+        booleanParam(
+            defaultValue: true,
+            description: "auto deploy to env?",
+            name: 'autodeploy',
         )
     }
 
     options {
-        buildDiscarder(logRotator(numToKeepStr: '15'))
+        disableConcurrentBuilds abortPrevious: true
     }
 
     stages {
@@ -115,9 +115,12 @@ pipeline {
 
         stage('deploy') {
             steps {
-                input "Is it deployed to the environment(${params.PROJECT_ENV})?"
-                withKubeConfig(caCertificate: '', clusterName: 'kubernetes', contextName: 'default', credentialsId: 'kubeconfig', namespace: 'ruoyi', restrictKubeConfigAccess: false, serverUrl: 'https://172.16.115.11:6443') {
-                    sh "helm upgrade -i ruoyi --set hub=${env.REGISTRY_HOST}/${env.PROJECT_NAME} --set tag=${params.version} --set redis.type=internal --set mysql.type=internal --set nacos.type=internal ruoyi --create-namespace --namespace ${env.PROJECT_NAME}-${env.PROJECT_ENV}"
+                script{
+                    if(autodeploy) {
+                        withKubeConfig(caCertificate: '', clusterName: 'kubernetes', contextName: 'default', credentialsId: 'kubeconfig', namespace: 'ruoyi', restrictKubeConfigAccess: false, serverUrl: 'https://172.16.115.11:6443') {
+                            sh "helm upgrade -i ruoyi --set hub=${env.REGISTRY_HOST}/${env.PROJECT_NAME} --set tag=${params.version} --set redis.type=internal --set mysql.type=internal --set nacos.type=internal ruoyi --create-namespace --namespace ${env.PROJECT_NAME}-${env.PROJECT_ENV}"
+                        }
+                    }
                 }
             }
         }

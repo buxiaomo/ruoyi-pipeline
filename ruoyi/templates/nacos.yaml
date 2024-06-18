@@ -1316,7 +1316,7 @@ spec:
             name: mysql
       containers:
         - name: mysql
-          image: mysql:5.7
+          image: "{{ .Values.mysql.internal.image.repository }}:{{ .Values.mysql.internal.image.tag }}"
           imagePullPolicy: Always
           volumeMounts:
             - name: mysql-vol
@@ -1447,10 +1447,10 @@ spec:
       initContainers:
         - name: wait-for-mysql
           image: busybox:1.36.1-glibc
-          command: ["nc", "-v", "mysql", "3306"]
+          command: ["telnet", "mysql", "3306"]
       containers:
         - name: nacos
-          image: nacos/nacos-server:v2.2.0
+          image: "{{ .Values.nacos.internal.image.repository }}:{{ .Values.nacos.internal.image.tag }}"
           imagePullPolicy: Always
           volumeMounts:
             - name: nacos
@@ -1460,18 +1460,18 @@ spec:
             - name: tcp
               containerPort: 8848
               protocol: TCP
-          # livenessProbe:
-          #   initialDelaySeconds: 90
-          #   periodSeconds: 5
-          #   timeoutSeconds: 5
-          #   tcpSocket:
-          #     port: 8848
-          # readinessProbe:
-          #   initialDelaySeconds: 5
-          #   periodSeconds: 5
-          #   timeoutSeconds: 5
-          #   tcpSocket:
-          #     port: 8848
+          livenessProbe:
+            initialDelaySeconds: 90
+            periodSeconds: 5
+            timeoutSeconds: 5
+            tcpSocket:
+              port: 8848
+          readinessProbe:
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            timeoutSeconds: 5
+            tcpSocket:
+              port: 8848
           env:
             - name: TZ
               value: "Asia/Shanghai"

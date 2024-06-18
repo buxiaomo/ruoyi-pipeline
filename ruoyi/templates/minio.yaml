@@ -48,7 +48,7 @@ spec:
             claimName: ruoyi
       containers:
         - name: minio
-          image: minio/minio:RELEASE.2021-03-12T00-00-47Z
+          image: "{{ .Values.ruoyi.minio.image.repository }}:{{ .Values.ruoyi.minio.image.tag }}"
           command: 
             - "/bin/sh"
             - "-ce"
@@ -78,9 +78,9 @@ spec:
             - name: TZ
               value: "Asia/Shanghai"
             - name: MINIO_ROOT_USER
-              value: "uig8ooMoqu6feek7Eefo"
+              value: "{{ .Values.ruoyi.minio.auth.username }}"
             - name: MINIO_ROOT_PASSWORD
-              value: "iekuenaa5uWaiqu9apeenaichieh6ahm6eilahfa"
+              value: "{{ .Values.ruoyi.minio.auth.password }}"
           resources:
             limits:
               cpu: "1"

@@ -10,6 +10,13 @@ tag: v3.6.4
 ruoyi:
   # file, minio
   storage: "file"
+  minio:
+    auth:
+      username: "uig8ooMoqu6feek7Eefo"
+      password: "iekuenaa5uWaiqu9apeenaichieh6ahm6eilahfa"
+    image:
+      repository: minio/minio
+      tag: RELEASE.2021-03-12T00-00-47Z
   sentinel:
     enable: true
 
