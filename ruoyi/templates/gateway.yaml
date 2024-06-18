@@ -109,12 +109,12 @@ spec:
             timeoutSeconds: 5
             tcpSocket:
               port: 8080
-          resources:
-            limits:
-              cpu: "2"
-              memory: "1Gi"
-            requests:
-              memory: "512Mi"
+          # resources:
+          #   limits:
+          #     cpu: "2"
+          #     memory: "1Gi"
+          #   requests:
+          #     memory: "512Mi"
           env:
             - name: TZ
               value: "Asia/Shanghai"

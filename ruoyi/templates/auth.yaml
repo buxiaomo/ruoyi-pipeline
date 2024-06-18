@@ -93,12 +93,12 @@ spec:
             timeoutSeconds: 5
             tcpSocket:
               port: 9200
-          resources:
-            limits:
-              cpu: "1"
-              memory: "1Gi"
-            requests:
-              memory: "512Mi"
+          # resources:
+          #   limits:
+          #     cpu: "1"
+          #     memory: "1Gi"
+          #   requests:
+          #     memory: "512Mi"
           env:
             - name: TZ
               value: "Asia/Shanghai"
