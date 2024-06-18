@@ -73,7 +73,7 @@ spec:
       initContainers:
         - name: wait-for-nacos
           image: busybox:1.36.1-glibc
-          command: ["telnet", "nacos", "8848"]
+          command: ["telnet", "nacos", "8848"] 
       containers:
         - name: ruoyi-modules-system
           image: "{{ .Values.hub }}/ruoyi-modules-system:{{ .Values.tag }}"

@@ -45,7 +45,7 @@ spec:
       volumes:
         - name: minio-vol
           persistentVolumeClaim:
-            claimName: ruoyi
+            claimName: minio-vol
       containers:
         - name: minio
           image: "{{ .Values.ruoyi.minio.image.repository }}:{{ .Values.ruoyi.minio.image.tag }}"
