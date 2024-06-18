@@ -9,7 +9,7 @@ tag: v3.6.4
 
 ruoyi:
   # file, minio
-  storage: "file"
+  storage: "minio"
   minio:
     storageClassName: "nfs-client"
     auth:
@@ -17,7 +17,7 @@ ruoyi:
       secretKey: "iekuenaa5uWaiqu9apeenaichieh6ahm6eilahfa"
     image:
       repository: minio/minio
-      tag: RELEASE.2021-03-12T00-00-47Z
+      tag: RELEASE.2024-06-13T22-53-53Z
   sentinel:
     enable: true
 
