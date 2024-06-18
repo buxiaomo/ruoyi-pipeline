@@ -1276,6 +1276,18 @@ data:
       AUTO_INCREMENT = 1
       DEFAULT CHARSET = utf8mb4 COMMENT ='AT transaction mode undo table';
 ---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mysql-vol
+spec:
+  accessModes:
+  - ReadWriteMany
+  resources:
+    requests:
+      storage: 10G
+  storageClassName: "{{ .Values.mysql.internal.storageClassName }}"
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -1297,7 +1309,7 @@ spec:
       volumes:
         - name: mysql-vol
           persistentVolumeClaim:
-            claimName: ruoyi
+            claimName: mysql-vol
         - name: mysql
           configMap:
             defaultMode: 0755
@@ -1432,10 +1444,10 @@ spec:
           configMap:
             defaultMode: 0755
             name: nacos
-      # initContainers:
-      #   - name: wait-for-mysql
-      #     image: mysql:5.7
-      #     command: ["/data/start.sh"]
+      initContainers:
+        - name: wait-for-mysql
+          image: busybox:1.36.1-glibc
+          command: ["nc", "-v", "mysql", "3306"]
       containers:
         - name: nacos
           image: nacos/nacos-server:v2.2.0

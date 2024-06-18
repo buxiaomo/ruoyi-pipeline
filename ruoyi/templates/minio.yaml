@@ -1,4 +1,17 @@
 {{ if eq .Values.ruoyi.storage "minio" }}
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: minio-vol
+spec:
+  accessModes:
+  - ReadWriteMany
+  resources:
+    requests:
+      storage: 10G
+  storageClassName: "{{ .Values.nacos.internal.storageClassName }}"
+---
 apiVersion: v1
 kind: Service
 metadata:

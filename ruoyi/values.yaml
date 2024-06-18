@@ -16,6 +16,7 @@ ruoyi:
 redis:
   type: internal
   internal:
+    storageClassName: "nfs-client"
     image:
       repository: redis
       tag: 6.2.6-alpine
@@ -27,6 +28,7 @@ redis:
 mysql:
   type: internal
   internal:
+    storageClassName: "nfs-client"
     image:
       repository: mysql
       tag: 5.7
@@ -38,6 +40,7 @@ mysql:
 nacos:
   type: internal
   internal:
+    storageClassName: "nfs-client"
     image:
       repository: nacos/nacos-server
       tag: v2.2.0
