@@ -24,7 +24,7 @@ spec:
       port: 9000
       targetPort: 9000
       protocol: TCP
-    - name: ui
+    - name: console
       port: 9001
       targetPort: 9001
       protocol: TCP
@@ -56,15 +56,18 @@ spec:
           command: 
             - "/bin/sh"
             - "-ce"
-            - "server /data --console-address :9001"
+            - "minio server /data --console-address :9001"
           imagePullPolicy: Always
           volumeMounts:
             - name: minio-vol
               subPath: minio-vol
               mountPath: /data
           ports:
-            - name: tcp
+            - name: api
               containerPort: 9000
+              protocol: TCP
+            - name: console
+              containerPort: 9001
               protocol: TCP
           livenessProbe:
             initialDelaySeconds: 15
