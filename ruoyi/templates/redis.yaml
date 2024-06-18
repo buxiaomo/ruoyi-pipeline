@@ -72,4 +72,11 @@ spec:
           env:
             - name: TZ
               value: "Asia/Shanghai"
+          resources:
+            limits:
+              cpu: "0.5"
+              memory: "128Mi"
+            requests:
+              cpu: "2m"
+              memory: "5Mi"
 {{ end }}

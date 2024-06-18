@@ -55,4 +55,11 @@ spec:
               value: "Asia/Shanghai"
             - name: PMA_HOST
               value: {{ if eq .Values.mysql.type "internal" }}mysql{{ else }}{{ .Values.mysql.external.addr }}{{end}}
+          resources:
+            limits:
+              cpu: "0.5"
+              memory: "128Mi"
+            requests:
+              cpu: "5m"
+              memory: "70Mi"
 {{ end }}
