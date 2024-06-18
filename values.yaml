@@ -5,11 +5,25 @@
 domainName: ruoyi.example.com
 
 hub: registry:5000/ruoyi
-tag: v3.6.2
+tag: v3.6.4
+
+ruoyi:
+  # file, minio
+  storage: "file"
+  minio:
+    auth:
+      accessKey: "uig8ooMoqu6feek7Eefo"
+      secretKey: "iekuenaa5uWaiqu9apeenaichieh6ahm6eilahfa"
+    image:
+      repository: minio/minio
+      tag: RELEASE.2021-03-12T00-00-47Z
+  sentinel:
+    enable: true
 
 redis:
   type: internal
   internal:
+    storageClassName: "nfs-client"
     image:
       repository: redis
       tag: 6.2.6-alpine
@@ -20,7 +34,12 @@ redis:
 
 mysql:
   type: internal
+  phpmyadmin: 
+    enable: true
+    repository: phpmyadmin
+    tag: 5.2.1-apache
   internal:
+    storageClassName: "nfs-client"
     image:
       repository: mysql
       tag: 5.7
@@ -32,6 +51,7 @@ mysql:
 nacos:
   type: internal
   internal:
+    storageClassName: "nfs-client"
     image:
       repository: nacos/nacos-server
       tag: v2.2.0

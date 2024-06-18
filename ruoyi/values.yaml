@@ -34,6 +34,10 @@ redis:
 
 mysql:
   type: internal
+  phpmyadmin: 
+    enable: true
+    repository: phpmyadmin
+    tag: 5.2.1-apache
   internal:
     storageClassName: "nfs-client"
     image:

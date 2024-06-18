@@ -1,3 +1,4 @@
+{{ if .Values.mysql.phpmyadmin.enable }}
 apiVersion: v1
 kind: Service
 metadata:
@@ -11,7 +12,6 @@ spec:
       port: 80
       targetPort: 80
       protocol: TCP
-  
 
 ---
 apiVersion: apps/v1
@@ -32,7 +32,7 @@ spec:
     spec:
       containers:
         - name: phpmyadmin
-          image: phpmyadmin:5.2.1-apache
+          image: "{{ .Values.mysql.phpmyadmin.repository }}:{{ .Values.mysql.phpmyadmin.tag }}"
           imagePullPolicy: Always
           ports:
             - name: tcp
@@ -54,7 +54,8 @@ spec:
             - name: TZ
               value: "Asia/Shanghai"
             - name: PMA_HOST
-              value: "mysql"
+              value: {{ if eq .Values.mysql.type "internal" }}mysql{{ else }}{{ .Values.mysql.external.addr }}{{end}}
             - name: PMA_USER
-              value: "root"
+              value: {{ if eq .Values.mysql.type "internal" }}root{{ else }}{{ .Values.mysql.external.username }}{{end}}
 
+{{ end }}
