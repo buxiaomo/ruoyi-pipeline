@@ -17,7 +17,7 @@ ruoyi:
       secretKey: "iekuenaa5uWaiqu9apeenaichieh6ahm6eilahfa"
     image:
       repository: minio/minio
-      tag: RELEASE.2024-06-13T22-53-53Z
+      tag: RELEASE.2024-06-13T22-53-53Z-cpuv1
   sentinel:
     enable: true
 
