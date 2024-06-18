@@ -10,7 +10,7 @@ spec:
   resources:
     requests:
       storage: 10G
-  storageClassName: "{{ .Values.nacos.internal.storageClassName }}"
+  storageClassName: "{{ .Values.ruoyi.minio.storageClassName }}"
 ---
 apiVersion: v1
 kind: Service
@@ -92,4 +92,4 @@ spec:
             requests:
               cpu: "0.5"
               memory: "512Mi"
-{{end}}
+{{ end }}

@@ -11,6 +11,7 @@ ruoyi:
   # file, minio
   storage: "file"
   minio:
+    storageClassName: "nfs-client"
     auth:
       accessKey: "uig8ooMoqu6feek7Eefo"
       secretKey: "iekuenaa5uWaiqu9apeenaichieh6ahm6eilahfa"
@@ -42,7 +43,7 @@ mysql:
     storageClassName: "nfs-client"
     image:
       repository: mysql
-      tag: 5.7
+      tag: 5.7.44
   external:
     addr: "192.168.0.2:3306"
     username: ""

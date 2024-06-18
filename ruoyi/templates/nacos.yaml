@@ -1345,22 +1345,14 @@ spec:
             initialDelaySeconds: 90
             periodSeconds: 5
             timeoutSeconds: 5
-            exec:
-              command:
-                - "mysqladmin"
-                - "-uroot"
-                - "-p${MYSQL_ROOT_PASSWORD}"
-                - "ping"
+            tcpSocket:
+              port: 3306
           readinessProbe:
             initialDelaySeconds: 5
             periodSeconds: 5
             timeoutSeconds: 5
-            exec:
-              command:
-                - "mysqladmin"
-                - "-uroot"
-                - "-p${MYSQL_ROOT_PASSWORD}"
-                - "ping"
+            tcpSocket:
+              port: 3306
           env:
             - name: TZ
               value: "Asia/Shanghai"
