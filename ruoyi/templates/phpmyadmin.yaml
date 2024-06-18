@@ -39,7 +39,7 @@ spec:
               containerPort: 80
               protocol: TCP
           livenessProbe:
-            initialDelaySeconds: 90
+            initialDelaySeconds: 10
             periodSeconds: 5
             timeoutSeconds: 5
             tcpSocket:
@@ -55,7 +55,4 @@ spec:
               value: "Asia/Shanghai"
             - name: PMA_HOST
               value: {{ if eq .Values.mysql.type "internal" }}mysql{{ else }}{{ .Values.mysql.external.addr }}{{end}}
-            - name: PMA_USER
-              value: {{ if eq .Values.mysql.type "internal" }}root{{ else }}{{ .Values.mysql.external.username }}{{end}}
-
 {{ end }}
