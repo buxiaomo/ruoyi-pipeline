@@ -69,6 +69,10 @@ spec:
           configMap:
             defaultMode: 0755
             name: ruoyi-auth
+      initContainers:
+        - name: wait-for-nacos
+          image: busybox:1.36.1-glibc
+          command: ["telnet", "nacos", "8848"]
       containers:
         - name: ruoyi-auth
           image: "{{ .Values.hub }}/ruoyi-auth:{{ .Values.tag }}"

@@ -67,6 +67,10 @@ spec:
           configMap:
             defaultMode: 0755
             name: ruoyi-modules-gen
+      initContainers:
+        - name: wait-for-nacos
+          image: busybox:1.36.1-glibc
+          command: ["telnet", "nacos", "8848"]
       containers:
         - name: ruoyi-modules-gen
           image: "{{ .Values.hub }}/ruoyi-modules-gen:{{ .Values.tag }}"
