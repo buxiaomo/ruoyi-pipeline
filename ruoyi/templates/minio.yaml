@@ -66,21 +66,25 @@ spec:
             initialDelaySeconds: 15
             periodSeconds: 5
             timeoutSeconds: 5
-            tcpSocket:
+            httpGet:
+              path: /minio/health/ready
+              scheme: HTTP
               port: 9000
           readinessProbe:
             initialDelaySeconds: 5
             periodSeconds: 5
             timeoutSeconds: 5
-            tcpSocket:
+            httpGet:
+              path: /minio/health/ready
+              scheme: HTTP
               port: 9000
           env:
             - name: TZ
               value: "Asia/Shanghai"
             - name: MINIO_ROOT_USER
-              value: "{{ .Values.ruoyi.minio.auth.username }}"
+              value: "{{ .Values.ruoyi.minio.auth.accessKey }}"
             - name: MINIO_ROOT_PASSWORD
-              value: "{{ .Values.ruoyi.minio.auth.password }}"
+              value: "{{ .Values.ruoyi.minio.auth.secretKey }}"
           resources:
             limits:
               cpu: "1"

@@ -12,8 +12,8 @@ ruoyi:
   storage: "file"
   minio:
     auth:
-      username: "uig8ooMoqu6feek7Eefo"
-      password: "iekuenaa5uWaiqu9apeenaichieh6ahm6eilahfa"
+      accessKey: "uig8ooMoqu6feek7Eefo"
+      secretKey: "iekuenaa5uWaiqu9apeenaichieh6ahm6eilahfa"
     image:
       repository: minio/minio
       tag: RELEASE.2021-03-12T00-00-47Z
