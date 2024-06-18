@@ -57,6 +57,4 @@ spec:
               value: "mysql"
             - name: PMA_USER
               value: "root"
-            - name: PMA_PASSWORD
-              value: "root"
 
