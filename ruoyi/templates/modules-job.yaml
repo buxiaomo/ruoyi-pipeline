@@ -77,14 +77,14 @@ spec:
             - "sh"
             - "-c"
             - |
-              for i in {0..9};do
+              for i in {1..60};do
                   curl -s http://nacos:8848 -o /dev/null
                   if [ $? = "0" ];then
                       echo "nacos is initialized"
                       exit 0
                   fi
-                  echo "nacos service is not initialized, waiting 10s..."
-                  sleep 10
+                  echo "nacos service is not initialized, waiting 1s... ($i/10)"
+                  sleep 1
               done
       containers:
         - name: ruoyi-modules-job
