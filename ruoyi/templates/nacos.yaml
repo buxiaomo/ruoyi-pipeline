@@ -1450,7 +1450,7 @@ spec:
           command:
             - "sh"
             - "-c"
-            - "for i in {0..9};do telnet mysql 3306; if [ $? = '0' ];then echo 'mysql is initialized'; exit 0; fi; echo 'mysql service is not initialized, waiting 10s...'; sleep 10; done"
+            - "for i in $(seq 1 10);do telnet mysql 3306; if [ $? == '0' ];then echo 'mysql is initialized'; exit 0; fi; echo 'mysql service is not initialized, waiting 10s...'; sleep 1; done"
       containers:
         - name: nacos
           image: "{{ .Values.nacos.internal.image.repository }}:{{ .Values.nacos.internal.image.tag }}"
