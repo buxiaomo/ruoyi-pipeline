@@ -1447,7 +1447,19 @@ spec:
       initContainers:
         - name: wait-for-mysql
           image: busybox:1.36.1-glibc
-          command: ["telnet", "mysql", "3306"]
+          command:
+            - "sh"
+            - "-c"
+            - |
+              for i in {0..9};do
+                  telnet mysql 3306
+                  if [ $? = "0" ];then
+                      echo "mysql is initialized"
+                      exit 0
+                  fi
+                  echo "mysql service is not initialized, waiting 10s..."
+                  sleep 10
+              done
       containers:
         - name: nacos
           image: "{{ .Values.nacos.internal.image.repository }}:{{ .Values.nacos.internal.image.tag }}"

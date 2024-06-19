@@ -88,16 +88,19 @@ spec:
       initContainers:
         - name: wait-for-nacos
           image: buxiaomo/curl:8.2.1
-          command: |
-            for i in {0..9};do
-                curl http://nacos:8848
-                if [ $? = "0" ];then
-                    echo "nacos is initialized"
-                    exit 0
-                fi
-                echo "nacos service is not initialized, waiting 10s..."
-                sleep 10
-            done
+          command:
+            - "sh"
+            - "-c"
+            - |
+              for i in {0..9};do
+                  curl -s http://nacos:8848 -o /dev/null
+                  if [ $? = "0" ];then
+                      echo "nacos is initialized"
+                      exit 0
+                  fi
+                  echo "nacos service is not initialized, waiting 10s..."
+                  sleep 10
+              done
       containers:
         - name: ruoyi-gateway
           image: "{{ .Values.hub }}/ruoyi-gateway:{{ .Values.tag }}"

@@ -29,6 +29,11 @@ pipeline {
             description: "auto deploy to env?",
             name: 'autodeploy',
         )
+        text(
+            description: "helm deployment parameter.",
+            name: "opts",
+            defaultValue: "--set redis.type=internal --set mysql.type=internal --set nacos.type=internal",
+        )
     }
 
     options {
@@ -118,7 +123,7 @@ pipeline {
                 script{
                     if(autodeploy) {
                         withKubeConfig(caCertificate: '', clusterName: 'kubernetes', contextName: 'default', credentialsId: 'kubeconfig', namespace: 'ruoyi', restrictKubeConfigAccess: false, serverUrl: 'https://172.16.115.11:6443') {
-                            sh "helm upgrade -i ruoyi --set hub=${env.REGISTRY_HOST}/${env.PROJECT_NAME} --set tag=${params.version} --set redis.type=internal --set mysql.type=internal --set nacos.type=internal ruoyi --create-namespace --namespace ${env.PROJECT_NAME}-${env.PROJECT_ENV}"
+                            sh "helm upgrade -i ruoyi --set hub=${env.REGISTRY_HOST}/${env.PROJECT_NAME} --set tag=${params.version} ${params.opts} ruoyi --create-namespace --namespace ${env.PROJECT_NAME}-${env.PROJECT_ENV}"
                         }
                     }
                 }

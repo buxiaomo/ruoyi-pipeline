@@ -13,8 +13,8 @@ ruoyi:
   minio:
     storageClassName: "nfs-client"
     auth:
-      accessKey: "uig8ooMoqu6feek7Eefo"
-      secretKey: "iekuenaa5uWaiqu9apeenaichieh6ahm6eilahfa"
+      accessKey: "minioadmin"
+      secretKey: "minioadmin"
     image:
       repository: minio/minio
       tag: RELEASE.2024-06-13T22-53-53Z-cpuv1
