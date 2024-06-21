@@ -19,6 +19,12 @@ data:
         # 环境配置
         active: dev
       cloud:
+        sentinel:
+          # 取消控制台懒加载
+          eager: true
+          transport:
+            # 控制台地址
+            dashboard: sentinel-dashboard:8080
         nacos:
           discovery:
             # 服务注册地址
@@ -31,12 +37,6 @@ data:
             # 共享配置
             shared-configs:
               - application-${spring.profiles.active}.${spring.cloud.nacos.config.file-extension}
-        sentinel:
-          # 取消控制台懒加载
-          eager: true
-          transport:
-            # 控制台地址
-            dashboard: sentinel-dashboard:8080
           # nacos配置持久化
           datasource:
             ds1:
