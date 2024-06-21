@@ -24,7 +24,7 @@ data:
           eager: true
           transport:
             # 控制台地址
-            dashboard: sentinel-dashboard:8080
+            dashboard: sentinel-dashboard:8080/sentinel
         nacos:
           discovery:
             # 服务注册地址

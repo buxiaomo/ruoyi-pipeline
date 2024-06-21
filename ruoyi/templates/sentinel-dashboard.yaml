@@ -8,7 +8,6 @@ metadata:
 spec:
   selector:
     app: sentinel-dashboard
-  type: NodePort
   ports:
     - name: dashboard
       port: 8080
