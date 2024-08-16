@@ -77,13 +77,13 @@ spec:
             - "sh"
             - "-c"
             - |
-              for i in $(seq 1 120);do
+              for i in $(seq 1 300);do
                   curl -s http://nacos:8848 -o /dev/null
                   if [ $? = "0" ];then
                       echo "nacos is initialized"
                       exit 0
                   fi
-                  echo "nacos service is not initialized, waiting 1s... ($i/120)"
+                  echo "nacos service is not initialized, waiting 1s... ($i/300)"
                   sleep 1
               done
       containers:
