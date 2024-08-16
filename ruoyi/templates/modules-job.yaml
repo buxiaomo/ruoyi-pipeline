@@ -64,6 +64,7 @@ spec:
     metadata:
       labels:
         app: ruoyi-modules-job
+        project: ruoyi
     spec:
       volumes:
         - name: ruoyi-modules-job

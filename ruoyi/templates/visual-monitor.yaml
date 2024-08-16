@@ -64,6 +64,7 @@ spec:
     metadata:
       labels:
         app: ruoyi-visual-monitor
+        project: ruoyi
     spec:
       volumes:
         - name: ruoyi-visual-monitor

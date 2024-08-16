@@ -69,7 +69,6 @@ metadata:
   name: ruoyi-gateway
   labels:
     app: ruoyi-gateway
-    project: ruoyi
 spec:
   replicas: 1
   selector:
@@ -79,6 +78,7 @@ spec:
     metadata:
       labels:
         app: ruoyi-gateway
+        project: ruoyi
     spec:
       volumes:
         - name: ruoyi-gateway

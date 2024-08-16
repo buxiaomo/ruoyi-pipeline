@@ -53,7 +53,6 @@ metadata:
   name: ruoyi-auth
   labels:
     app: ruoyi-auth
-    project: ruoyi
 spec:
   replicas: 1
   selector:
@@ -63,6 +62,7 @@ spec:
     metadata:
       labels:
         app: ruoyi-auth
+        project: ruoyi
     spec:
       volumes:
         - name: ruoyi-auth

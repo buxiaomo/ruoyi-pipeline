@@ -61,6 +61,7 @@ spec:
     metadata:
       labels:
         app: ruoyi-modules-gen
+        project: ruoyi
     spec:
       volumes:
         - name: ruoyi-modules-gen
