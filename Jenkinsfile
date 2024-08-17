@@ -10,7 +10,7 @@ pipeline {
         REPOSITORY_AUTH = "gitlab"
         REPOSITORY_URL = "https://gitee.com/y_project/RuoYi-Cloud.git"
 
-        REGISTRY_HOST = "172.16.115.11:5000"
+        REGISTRY_HOST = "192.168.88.100:5000"
     }
 
     parameters{
