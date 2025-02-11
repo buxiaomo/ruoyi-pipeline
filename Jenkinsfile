@@ -54,7 +54,7 @@ pipeline {
                     steps {
                         dir('RuoYi-Cloud') {
                             withDockerContainer(image: 'maven:3.9.0', args: '--net host -v m2:/root/.m2') {
-                                sh "mvn clean package -Dmaven.test.skip=true -q"
+                                sh "mvn clean package -Dmaven.test.skip=true"
                             }
                         }
                     }
